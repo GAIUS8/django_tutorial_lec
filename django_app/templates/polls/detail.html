@@ -1,13 +1,7 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
+{% extends 'polls/base.html' %}
+{% block title %}Polls Detail{% endblock %}
+
+{% block content %}
 <h1>{{ question.question_text }}</h1>
 
 {% if messages %}
@@ -22,8 +16,7 @@
         <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
         <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
     {% endfor %}
-    <button type="submit" value="vote">Vote</button>
+    <button class="btn btn-primary" type="submit" value="vote">Vote</button>
 </form>
 
-</body>
-</html>
+{% endblock %}
