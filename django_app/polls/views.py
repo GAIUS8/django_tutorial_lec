@@ -15,14 +15,17 @@ def index(request):
 
 
 def detail(request, question_id):
-    # try:
-    #     question = Question.objects.get(pk=question_id)
-    # except Question.DoesNotExist:
-    #     raise Http404("Question does not exist")
-    # return render(request, 'polls/detail.html', {'question': question})
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, 'polls/detail.html', {'question': question})
+    # question_id가 pk인 Question객체를 가져와 context라는 이름을 가진 dict에 question이라는 키 값으로 위 변수를 할당
+    # 이후 polls/detail.html과 context를 랜더한 결과를 리턴
+    try:
+        question = Question.objects.get(pk=question_id)
+    except Question.DoesNotExist as e:
+        raise Http404('That Question does not exist')
 
+    context = {
+        'question': question,
+    }
+    return render(request, 'polls/detail.html', context=context)
 
 def results(request, question_id):
     resoponse = "you're looking at the results of question {}"
