@@ -1,7 +1,8 @@
 from django.http import Http404
-from django.shortcuts import render, get_object_or_404, get_list_or_404
+from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
 from django.http import HttpResponse
 from django.template import loader
+from django.contrib import messages
 
 from .models import Question, Choice
 
@@ -25,10 +26,28 @@ def detail(request, question_id):
     }
     return render(request, 'polls/detail.html', context=context)
 
+
 def results(request, question_id):
     resoponse = "you're looking at the results of question {}"
     return HttpResponse(resoponse.format(question_id))
 
 
 def vote(request, question_id):
-    return HttpResponse("you're voting on question {}".format(question_id))
+    if request.method == 'POST':
+        data = request.POST
+        try:
+            choice_id = data['choice']
+            choice = Choice.objects.get(id=choice_id)
+            choice.votes += 1
+            choice.save()
+            # return HttpResponse('Choice is {}'.format(choice_id))
+            return redirect('polls:results', choice_id)
+        except (KeyError, Choice.DoesNotExist):
+            messages.add_message(
+                request,
+                messages.ERROR,
+                "You didn't select a choice",)
+        return redirect('polls:detail', question_id)
+
+    else:
+        return HttpResponse('wrong')
