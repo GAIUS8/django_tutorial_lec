@@ -19,6 +19,6 @@
 {% for choice in question.choice_set.all %}
     <span>{{ choice.choice_text }}</span><span>{{ choice.votes }}번</span><br>
 {% endfor %}
-
+<a href="{%  url 'polls:detail' question.id %}">vote again</a>
 </body>
 </html>
