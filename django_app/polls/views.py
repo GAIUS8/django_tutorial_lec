@@ -27,11 +27,6 @@ def detail(request, question_id):
     return render(request, 'polls/detail.html', context=context)
 
 
-def results(request, question_id):
-    resoponse = "you're looking at the results of question {}"
-    return HttpResponse(resoponse.format(question_id))
-
-
 def vote(request, question_id):
     if request.method == 'POST':
         data = request.POST
@@ -41,13 +36,23 @@ def vote(request, question_id):
             choice.votes += 1
             choice.save()
             # return HttpResponse('Choice is {}'.format(choice_id))
-            return redirect('polls:results', choice_id)
+            return redirect('polls:results', question_id)
         except (KeyError, Choice.DoesNotExist):
             messages.add_message(
                 request,
                 messages.ERROR,
-                "You didn't select a choice",)
-        return redirect('polls:detail', question_id)
+                "You didn't select a choice",
+            )
+            return redirect('polls:detail', question_id)
 
     else:
         return HttpResponse('wrong')
+
+
+def results(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+
+    context = {
+        'question': question,
+    }
+    return render(request, 'polls/results.html', context=context)
